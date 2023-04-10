@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>注册</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+	<link rel="stylesheet" href="static/css/amazeui.css" />
+	<link href="static/css/dlstyle.css" rel="stylesheet" type="text/css">
+
+	<link rel="stylesheet" href="static/css/bootstrap.min.css" />
+</head>
+
+<body>
+
+
+
+	<div style="background-color: beige;border: 1px;height: 90%">
+		<div style="background-color: begie;height: 100%;">
+
+			<div style="margin-left:auto; background-color: beige;" id="container">
+				<h3 class="title" style="background-color: beige;">用户注册</h3>
+				<h5 :style="colorStyle" class="background-color:beige">
+					<div style="text-align: center;">{{tips}}</div>
+				</h5>
+				<div class="clear"></div>
+				<div class="login-form" style="background-color:beige;">
+					<form style="background-color: beige;">
+						<div class="user-name">
+							<label for="user"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></label>
+							<input type="text" v-model="user.username" placeholder="邮箱/手机/用户名" @keyup="checkRegistInfo">
+							<br />
+						</div>
+
+						<div class="user-pass" style="margin-top: 15px;">
+							<label for="password"><span class="glyphicon glyphicon-lock"
+									aria-hidden="true"></span></label>
+							<input type="password" v-model="user.password" placeholder="请输入密码" @keyup="checkRegistInfo">
+						</div>
+						<div class="user-pass" style="margin-top: 15px;">
+							<label for="password"><span class="glyphicon glyphicon-lock"
+									aria-hidden="true"></span></label>
+							<input type="password" v-model="repassword" placeholder="请再次输入密码" @keyup="checkRegistInfo">
+						</div>
+					</form>
+				</div>
+				<div class="login-links" style="background-color: begie;"><br /></div>
+				<div class="am-cf" style="background-color: begie;">
+					<input type="button" @click="doRegist" value="提交注册" class="am-btn am-btn-primary am-btn-sm">
+				</div>
+				<div class="partner"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="footer ">
+		<div class="footer-hd ">
+
+		</div>
+		<div class="footer-bd ">
+			<p>
+				<a href="# ">联系我们</a>
+				<a href="# ">网站地图</a>
+			</p>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="static/js/jquery-1.9.min.js"></script>
+	<script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
+	<script src="static/js/axios.min.js"></script>
+	<script src="static/js/baseurl.js"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: "#container",
+			data: {
+				user: {
+					username: "",
+					password: "",
+				},
+				repassword: "",
+				tips: "",
+				colorStyle: "color:red",
+				isRight: false,
+			},
+			methods: {
+				doRegist() {
+					if (!vm.isRight) {
+						vm.tips = "请输入正确且完整的注册信息"
+					} else {
+						//提交注册
+						var url = baseUrl + "user" + "/" + vm.user.username + "/" + vm.user.password;
+						axios.post(url).then((res) => {
+							var vo = res.data;
+							if (vo.code == 200) {
+								vm.tips = "注册成功,正在跳转";
+								vm.colorStyle = "color:green";
+								setTimeout(function () {
+									window.location.href = "login.html";
+								}, 1000)
+							} else {
+								vm.tips =res.data.msg
+							}
+						});
+					}	
+
+				},
+		checkRegistInfo: function () {
+			//1.校验账号
+			if (vm.user.username == "") {
+				vm.tips = "请输入账号!";
+				vm.isRight = false;
+			} else if (vm.user.username.length < 5 || vm.user.username.length > 20) {
+				vm.tips = "账号长度必须为5-20个字符!";
+				vm.isRight = false;
+			} else {
+				//2.校验密码
+				if (vm.user.password == "") {
+					vm.tips = "请输入密码!";
+					vm.isRight = false;
+				} else if (vm.user.password.length < 5 || vm.user.password.length > 20) {
+					vm.tips = "密码长度必须为5-20个字符！";
+					vm.isRight = false;
+				} else {
+					// 3.校验重复密码
+					if (vm.repassword == "") {
+						vm.tips = "请再次输入密码!";
+						vm.isRight = false;
+					} else if (vm.user.password != vm.repassword) {
+						vm.tips = "两次密码输入不一致！";
+						vm.isRight = false;
+					} else {
+						vm.tips = "";
+						vm.isRight = true;
+					}
+				}
+			}
+		}
+
+			}
+		});
+	</script>
+</body>
+
+</html>
