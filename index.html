@@ -21,9 +21,7 @@
 </head>
 
 <body>
-
     <div class="hmtop" id="container">
-    <div>gittest</div>
         <!--顶部导航条 -->
         <div class="am-container header">
             <ul class="message-l">
@@ -120,36 +118,40 @@
                             <div class="category">
                                 <ul class="category-list" id="js_climit_li">
                                     <li v-for="c1 in categories" class="appliance js_toggle relative">
+                                        <!-- 一级分类 -->
                                         <div class="category-info">
                                             <h3 class="category-name b-category-name">
-                                                <i><img :src="'static/images/'+c1.categoryIcon"></i>
-                                                <a class="ml-22" :title="c1.categoryName">{{c1.categoryName}}</a>
+                                                <i><img :src="'static/images/'+c1.categoryIcon" alt="图片"></i>
+                                                <a class="ml-22" title="点心">{{c1.categoryName}}</a>
+                                                <em>&gt;</em>
                                             </h3>
-                                            <em>&gt;</em>
                                         </div>
-                                        <!-- 二级分类 -->
+                                        <!-- 一级分类的下的二级分类 -->
                                         <div class="menu-item menu-in top">
                                             <div class="area-in">
                                                 <div class="area-bg">
                                                     <div class="menu-srot">
                                                         <div class="sort-side">
+                                                            <!-- 二级分类列表-->
                                                             <dl class="dl-sort" v-for="c2 in c1.categories">
-                                                                <!-- 每个dl代表一个二级分类 -->
-                                                                <dt><span
-                                                                        :title="c2.categoryName">{{c2.categoryName}}</span>
+                                                                <dt>
+                                                                    <span :title="c2.categoryName">
+                                                                        {{c2.categoryName}}
+                                                                    </span>
+                                                                    <dd v-for="c3 in c2.categories">
+                                                                        <a :title="c3.categoryName" href="search.html">
+                                                                            <span>
+                                                                                {{c3.categoryName}}
+                                                                            </span>
+                                                                        </a>
+                                                                    </dd>
                                                                 </dt>
-                                                                <dd v-for="c3 in c2.categories">
-                                                                    <a :title="c3.categoryName"
-                                                                        :href="'search.html?cid='+c3.categoryId"><span>{{c3.categoryName}}</span></a>
-                                                                </dd>
                                                             </dl>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <b class="arrow"></b>
                                     </li>
                                 </ul>
                             </div>
@@ -163,9 +165,10 @@
 
                 <script type="text/javascript">
                     (function () {
-                        $('.am-slider').flexslider();
+                        $('.am-slider').flexslider();//让轮播图，动起来
                     });
                     $(document).ready(function () {
+                        // 让二级分类。列表动起来
                         $("li").hover(function () {
                             $(".category-content .category-list li.first .menu-in").css("display", "none");
                             $(".category-content .category-list li.first").removeClass("hover");
@@ -218,7 +221,7 @@
                                     <img src="static/images/TJ.jpg"></img>
                                     <p>XXXXXXXXXXXXXXXXXX</p>
                                 </a></li>
-<!-- 右侧用户头像以及用户欢迎 -->
+                            <!-- 右侧用户头像以及用户欢迎 -->
                             <div class="mod-vip">
                                 <div class="m-baseinfo" v-if="isLogin">
                                     <a href="person/index.html">
@@ -757,21 +760,24 @@
                     console.log(this.indexImgs);
                     // jquery中的轮播图
                     setTimeout(function () {
-                    // 初始化轮播图渲染效果
+                        // 初始化轮播图渲染效果
                         $('.am-slider').flexslider();
                     }, 100)
                 });
-                
+
                 //分类列表
                 var url = baseUrl + "index/category-list";
                 axios.get(url,
-                {params:{
-                    parentId:0,
-                }}
+                    {
+                        params: {
+                            parentId: 0,
+                        }
+                    }
                 ).then((res) => {
                     var vo1 = res.data;
                     this.categories = vo1.data;
-                    //初始化分类列表的动画效果
+                    console.log(this.categories)
+                    //初始化分类列表的动画效果，categories数据渲染后，在进行js动态效果的渲染
                     setTimeout(function () {
                         $("li").hover(function () {
                             $(".category-content .category-list li.first .menu-in").css("display", "none");
