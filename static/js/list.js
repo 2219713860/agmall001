@@ -2,22 +2,22 @@
 
 
 //初始化选项的选中效果单独定义成js
-function initChoose(){
-	$("#props .theme-options").each(function() {
-		var i = $(this);
-		var p = i.find("ul>li");
-		p.click(function() {
-			if (!!$(this).hasClass("selected")) {
-				$(this).removeClass("selected");
+// function initChoose(){
+// 	$("#props .theme-options").each(function() {
+// 		var i = $(this);
+// 		var p = i.find("ul>li");
+// 		p.click(function() {
+// 			if (!!$(this).hasClass("selected")) {
+// 				$(this).removeClass("selected");
 
-			} else {
-				$(this).addClass("selected").siblings("li").removeClass("selected");
+// 			} else {
+// 				$(this).addClass("selected").siblings("li").removeClass("selected");
 
-			}
+// 			}
 
-		})
-	});
-}
+// 		})
+// 	});
+// }
 //商品规格选择
 $(function() {
 	$(".theme-options").each(function() {

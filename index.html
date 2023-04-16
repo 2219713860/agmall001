@@ -138,13 +138,13 @@
                                                                     <span :title="c2.categoryName">
                                                                         {{c2.categoryName}}
                                                                     </span>
-                                                                    <dd v-for="c3 in c2.categories">
-                                                                        <a :title="c3.categoryName" href="search.html">
-                                                                            <span>
-                                                                                {{c3.categoryName}}
-                                                                            </span>
-                                                                        </a>
-                                                                    </dd>
+                                                                <dd v-for="c3 in c2.categories">
+                                                                    <a :title="c3.categoryName" href="search.html">
+                                                                        <span>
+                                                                            {{c3.categoryName}}
+                                                                        </span>
+                                                                    </a>
+                                                                </dd>
                                                                 </dt>
                                                             </dl>
                                                         </div>
@@ -283,13 +283,13 @@
                 <div class="am-g am-g-fixed recommendation">
                     <div class="clock am-u-sm-3">
                         <p>
-                        美 食 新 品
-                            <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+                            美 食 新 品
+                            <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             各 类 商 品
                         </p>
                     </div>
                     <!-- 商品推荐图片销量 -->
-                    <a :href="'introduction.html?pid='+rp.productId" v-for="rp in recommendProducts">
+                    <a :href="'introduction.html?pid='+rp.productId" v-for="rp in recommendproducts">
                         <div class="am-u-sm-4 am-u-lg-3 ">
                             <div class="info">
                                 <h3>{{rp.productName}}</h3>
@@ -305,12 +305,13 @@
                 <div class="clear "></div>
 
                 <!--热门活动 -->
+
                 <div class="am-container activity ">
                     <div class="shopTitle ">
                         <h4>活动</h4>
                         <h3>每期活动 优惠享不停 </h3>
                         <span class="more ">
-                            <a href="# ">全部活动<i class="am-icon-angle-right" style="padding-left:10px ;"></i></a>
+                            <a href="# "><i class="am-icon-angle-right" style="padding-left:10px ;">全部活动</i></a>
                         </span>
                     </div>
                     <div class="am-g am-g-fixed ">
@@ -361,27 +362,17 @@
                     </div>
                 </div>
 
-                <div class="clear "></div>
+                <div class="clear"></div>
 
                 <!--分类商品推荐-->
                 <template v-for="rc,index in recommendCategories">
-                    <div v-if="rc.productS.length>0" :id="'f'+(index+1)">
-
+                    <div v-if="rc.products.length>0" :id="'f'+(index+1)">
                         <div class="am-container ">
                             <div class="shopTitle ">
                                 <h4>{{rc.categoryName}}</h4>
                                 <h3>{{rc.categorySlogan}}</h3>
-                                <!-- 二级分类 -->
-                                <!-- <div class="today-brands ">
-                                <a href="# ">桂花糕</a>
-                                <a href="# ">奶皮酥</a>
-                                <a href="# ">栗子糕 </a>
-                                <a href="# ">马卡龙</a>
-                                <a href="# ">铜锣烧</a>
-                                <a href="# ">豌豆黄</a>
-                            </div> -->
                                 <span class="more ">
-                                    <a href="# ">更多美味<i class="am-icon-angle-right" style="padding-left:10px ;"></i></a>
+                                    <a href="# "><i class="am-icon-angle-right" style="padding-left:10px ;">更多美味</i></a>
                                 </span>
                             </div>
                         </div>
@@ -389,12 +380,8 @@
                         <div class="am-g am-g-fixed floodFour">
                             <div class="am-u-sm-5 am-u-md-4 text-one list ">
                                 <div class="word">
-                                    <a class="outer" href="#"><span class="inner"><b class="text">核桃</b></span></a>
-                                    <a class="outer" href="#"><span class="inner"><b class="text">核桃</b></span></a>
-                                    <a class="outer" href="#"><span class="inner"><b class="text">核桃</b></span></a>
-                                    <a class="outer" href="#"><span class="inner"><b class="text">核桃</b></span></a>
-                                    <a class="outer" href="#"><span class="inner"><b class="text">核桃</b></span></a>
-                                    <a class="outer" href="#"><span class="inner"><b class="text">核桃</b></span></a>
+                                    <a v-for="product in rc.products" class="outer" href="#"><span class="inner"><b
+                                                class="text">{{product.productName}}</b></span></a>
                                 </div>
                                 <a href="# ">
                                     <div class="outer-con ">
@@ -410,94 +397,92 @@
                                 <div class="triangle-topright"></div>
                             </div>
 
-                            <div class="am-u-sm-7 am-u-md-4 text-two sug" v-if="rc.productS.length>0">
+                            <div class="am-u-sm-7 am-u-md-4 text-two sug" v-if="rc.products.length>0">
                                 <div class="outer-con ">
-                                    <div class="title "> {{rc.productS[0].productName}}</div>
-                                    <div class="sub-title ">销量:{{rc.productS[0].soldNum}}</div>
+                                    <div class="title "> {{rc.products[0].productName}}</div>
+                                    <div class="sub-title ">销量:{{rc.products[0].soldNum}}</div>
                                     <i class="am-icon-shopping-basket am-icon-md  seprate"></i>
                                 </div>
-                                <a href="#"><img :src="'static/pimgs/'+rc.productS[0].imgs[0].url" /></a>
+                                <a href="#"><img :src="'static/pimgs/'+rc.products[0].imgs[0].url" /></a>
                             </div>
 
-                            <div class="am-u-sm-7 am-u-md-4 text-two" v-if="rc.productS.length>1">
+                            <div class="am-u-sm-7 am-u-md-4 text-two" v-if="rc.products.length>1">
                                 <div class="outer-con ">
                                     <div class="title ">
-                                        {{rc.productS[1].productName}}
+                                        {{rc.products[1].productName}}
                                     </div>
                                     <div class="sub-title ">
-                                        销量:{{rc.productS[1].soldNum}}
+                                        销量:{{rc.products[1].soldNum}}
                                     </div>
                                     <i class="am-icon-shopping-basket am-icon-md  seprate"></i>
                                 </div>
-                                <a href="# "><img src="static/images/1.jpg" /></a>
+                                <a href="#"><img src="static/images/1.jpg" /></a>
                             </div>
 
 
-                            <div class="am-u-sm-3 am-u-md-2 text-three big" v-if="rc.productS.length>2">
+                            <div class="am-u-sm-3 am-u-md-2 text-three big" v-if="rc.products.length>2">
                                 <div class="outer-con ">
                                     <div class="title ">
-                                        {{rc.productS[2].productName}}
+                                        {{rc.products[2].productName}}
                                     </div>
                                     <div class="sub-title ">
-                                        销量:{{rc.productS[2].soldNum}}
+                                        销量:{{rc.products[2].soldNum}}
                                     </div>
                                     <i class="am-icon-shopping-basket am-icon-md  seprate"></i>
                                 </div>
-                                <a href="# "><img src="static/images/2.jpg" /></a>
+                                <a href="#"><img src="static/images/2.jpg" /></a>
                             </div>
 
-                            <div class="am-u-sm-3 am-u-md-2 text-three sug" v-if="rc.productS.length>3">
+                            <div class="am-u-sm-3 am-u-md-2 text-three sug" v-if="rc.products.length>3">
                                 <div class="outer-con ">
                                     <div class="title ">
-                                        {{rc.productS[3].productName}}
+                                        {{rc.products[3].productName}}
                                     </div>
                                     <div class="sub-title ">
-                                        销量:{{rc.productS[3].soldNum}}
+                                        销量:{{rc.products[3].soldNum}}
                                     </div>
                                     <i class="am-icon-shopping-basket am-icon-md  seprate"></i>
                                 </div>
-                                <a href="# "><img src="static/images/3.jpg" /></a>
+                                <a href="#"><img src="static/images/3.jpg" /></a>
                             </div>
 
-                            <div class="am-u-sm-3 am-u-md-2 text-three " v-if="rc.productS.length>4">
+                            <div class="am-u-sm-3 am-u-md-2 text-three " v-if="rc.products.length>4">
                                 <div class="outer-con ">
                                     <div class="title ">
-                                        {{rc.productS[4].productName}}
+                                        {{rc.products[4].productName}}
                                     </div>
                                     <div class="sub-title ">
-                                        销量:{{rc.productS[4].soldNum}}
+                                        销量:{{rc.products[4].soldNum}}
                                     </div>
                                     <i class="am-icon-shopping-basket am-icon-md  seprate"></i>
                                 </div>
-                                <a href="# "><img src="static/images/4.jpg" /></a>
+                                <a href="#"><img src="static/images/4.jpg" /></a>
                             </div>
 
-                            <div class="am-u-sm-3 am-u-md-2 text-three last big " v-if="rc.productS.length>5">
+                            <div class="am-u-sm-3 am-u-md-2 text-three last big " v-if="rc.products.length>5">
                                 <div class="outer-con ">
                                     <div class="title ">
-                                        {{rc.productS[5].productName}}
+                                        {{rc.products[5].productName}}
                                     </div>
                                     <div class="sub-title ">
-                                        销量:{{rc.productS[5].soldNum}}
+                                        销量:{{rc.products[5].soldNum}}
                                     </div>
                                     <i class="am-icon-shopping-basket am-icon-md  seprate"></i>
                                 </div>
-                                <a href="# "><img src="static/images/5.jpg" /></a>
+                                <a href="#"><img src="static/images/5.jpg" /></a>
                             </div>
 
 
                         </div>
-                        <div class="clear "></div>
+                        <div class="clear"></div>
                     </div>
 
-                    <div class="clear "></div>
+                    <div class="clear"></div>
                 </template>
             </div>
         </div>
 
     </div>
-
-
     <!-- 页脚 -->
     <div class="footer ">
         <div class="footer-hd ">
@@ -702,7 +687,6 @@
     <script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
     <script src="static/js/axios.min.js"></script>
     <script src="static/js/baseurl.js"></script>
-
     <script type="text/javascript">
         var vm = new Vue({
             el: "#container",
@@ -712,7 +696,7 @@
                 isLogin: false,
                 indexImgs: [],
                 categories: [],
-                recommendProducts: [],
+                recommendproducts: [],
                 recommendCategories: [],
                 keyword: "",
                 token: null,
@@ -739,7 +723,6 @@
                 }).then((res) => {
                     var vo = res.data;
                     this.indexImgs = vo.data;
-                    console.log(this.indexImgs);
                     // jquery中的轮播图
                     setTimeout(function () {
                         // 初始化轮播图渲染效果
@@ -758,7 +741,6 @@
                 ).then((res) => {
                     var vo1 = res.data;
                     this.categories = vo1.data;
-                    console.log(this.categories)
                     //初始化分类列表的动画效果，categories数据渲染后，在进行js动态效果的渲染
                     setTimeout(function () {
                         $("li").hover(function () {
@@ -776,15 +758,13 @@
                 //新品推荐
                 var url2 = baseUrl + "index/list-recommend";
                 axios.get(url2).then((res) => {
-                    this.recommendProducts = res.data.data;
-                    console.log(recommendProducts);
+                    this.recommendproducts = res.data.data;
                 });
 
                 //分类商品推荐
-                var url3 = baseUrl + "index/category-recommends";
+                var url3 = baseUrl + "index/list-category-recommend";
                 axios.get(url3).then((res) => {
                     this.recommendCategories = res.data.data;
-                    console.log(this.recommendCategories);
                 })
 
             },
@@ -795,7 +775,6 @@
                     window.location.href = encodeURI(url);
                 },
                 clearCookie: function () {
-                    console.log("123");
                     clearCookie("token", "1");
                 }
             }
