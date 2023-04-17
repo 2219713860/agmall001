@@ -118,7 +118,7 @@
 						axios.get(url).then((res) => {
 							var vo = res.data;
 							console.log(vo)
-							if (vo.code == 200) {
+							if (vo.code == 10000) {
 								//如果登录成功将token存入cookie中
 								setCookieValue("token", vo.msg);
 								setCookieValue("username", vo.data.username);
@@ -126,8 +126,10 @@
 								setCookieValue("userid", vo.data.userId);
 								console.log(vo);
 								if (this.returnUrl == null) {
+									// 当returnURL没有的时候，也就是正常的登录，直接跳转到首页面
 									window.location.href = "index.html";
 								} else {
+									// 当有returnURL有值的时候，即将跳转到returnURL网址中，并且将参数设置
 									this.returnUrl = this.returnUrl + "?m=" + Math.random();
 									if (this.pid != null) {
 										this.returnUrl = this.returnUrl + "&pid=" + this.pid;
@@ -172,7 +174,6 @@
 			},
 			created: function () {
 				this.tips = getUrlParam("tips");
-
 				this.returnUrl = getUrlParam("returnUrl");
 				this.pid = getUrlParam("pid");
 				this.skuindex = getUrlParam("skuindex");

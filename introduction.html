@@ -1127,32 +1127,33 @@
 					axios({
 						url: url5,
 						method: "post",
-						
 						headers: {
 							token: token,
-							'Content-Type':'application/json'
-							
+							'Content-Type': 'application/json'
 						},
 						data: info
 					}).then((res) => {
 						//处理添加购物车的回调
-						if (res.data.code == 200) {
-							console.log(100000000000000000000000000000000000000000000);
+						console.log(8888888);
+						console.log(res);
+						if (res.data.code == 10000) {
 							layer.msg("添加购物车成功！");
-						} else if (res.data.code == 400) {
+						} else if (res.data.code == 10001) {
 							layer.msg("添加购物车失败！");
-						}
-						else {
+						} else {
 							var str = "";
 							if (res.data.code == 20001) {
-								str = "请先登录!";
+								str = "用户未登录！!";
 							} else if (res.data.code == 20002) {
 								str = "登录过期，请重新登录!";
+							} else if (res.data.code == 20003) {
+								str = "登录不合法!！！！！！！！！！！！请自重";
 							}
 							var params = "tips=" + str + "&returnUrl=introduction.html&pid="
 								+ this.productId + "&skuindex=" + this.currentSkuIndex + "&num=" + this.num;
 							//跳转到登陆页面
 							var loginUrl = "login.html?" + params;
+							// 对路径整体进行编码
 							var url = encodeURI(loginUrl)
 							window.location.href = url;
 						}
