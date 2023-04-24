@@ -13,6 +13,7 @@
 		<link href="static/css/optstyle.css" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript" src="static/js/jquery.js"></script>
+		<script type="text/javascript" src="static/js/baseurl.js"></script>
 
 	</head>
 
@@ -103,7 +104,7 @@
 								<div class="cart-title">包装：</div>
 								<ul>
 									<li class="sku-line selected">包装：裸装<i></i></li>
-									<li class="sku-line">两支手袋装（送彩带）<i></i></li>
+									<li class="sku-line">大声手袋装（送彩带）<i></i></li>
 								</ul>
 							</li>
 							<div class="theme-options">
@@ -132,7 +133,6 @@
 								<span id="Stock" class="tb-hidden">库存<span class="stock">1000</span>件</span>
 							</div>
 						</div>
-
 					</form>
 				</div>
 			</div>
@@ -183,32 +183,27 @@
 						alert("支付成功，即将跳转至首页");
 						window.location.href="index.html"
 					}
-					
-					
-					// //轮询访问是否付款
-					// var oid=this.orderInfo.orderId;
-					// var i=setInterval(function(){
-					// 	console.log("-----");
-					// 	var url=baseUrl+"order/status/"+oid;
-					// 	axios({
-					// 		url:url,
-					// 		method:"get",
-					// 		headers:{
-					// 			token:getCookieValue("token")
-					// 		}
-					// 	}).then((res)=>{
-					// 		if(res.data.data=="1"){
-					// 			//订单未支付
-								
-					// 		}else if(res.data.data=="2"){
-					// 			$("#div1").html("<label style='font-size:20px; color:green'>订单支付完成！</label>");
-					// 			clearInterval(i);
-					// 		}
-					// 	})
-					// },1000)
+					//轮询访问是否付款
+					var oid=this.orderInfo.orderId;
+					var i=setInterval(function(){
+						console.log("-----");
+						var url=baseUrl+"order/status/"+oid;
+						axios({
+							url:url,
+							method:"get",
+							headers:{
+								token:getCookieValue("token")
+							}
+						}).then((res)=>{
+							if(res.data.data=="1"){
+								//订单未支付
+							}else if(res.data.data=="2"){
+								$("#div1").html("<label style='font-size:20px; color:green'>订单支付完成！</label>");
+								clearInterval(i);
+							}
+						})
+					},1000)
 				},
-				
-				
 			});
 		</script>
 		

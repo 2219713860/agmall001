@@ -705,6 +705,7 @@
             created: function () {
                 //从cookie中获取token、username、userimg
                 var token = getCookieValue("token");
+                
                 this.token = token;
                 if (token != null && token != "") {
                     this.isLogin = true;
