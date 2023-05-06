@@ -1,0 +1,133 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>添加上帝的的地址</title>
+    <link href="static/css/amazeui.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/admin.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/demo.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/hmstyle.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/skin.css" rel="stylesheet" type="text/css" />
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/amazeui.min.js"></script>
+</head>
+
+<body>
+    <div style="margin-left: 80%;"><a href="index.html">我要回家</a> </div>
+    <div style="margin-top: 20%;margin-left: 40%;" id="addrContainer">
+        <div v-if="isRight==true">格式正确，可以提交了~~~</div>
+        <div v-else>缺少必填项！！！！！</div>
+        <table>
+            <tr> <input type="text" required v-model="receiverName" placeholder="收件人姓名" @keyup = "checkIsRight"/></tr><br />
+            <tr> <input type="text" required v-model="receiverMobile" placeholder="收件人电话" @keyup = "checkIsRight"/></tr><br />
+            <tr> <input type="text" required v-model="province" placeholder="省份" @keyup = "checkIsRight"/></tr><br />
+            <tr> <input type="text" required v-model="city" placeholder="城市" @keyup = "checkIsRight"/></tr><br />
+            <tr> <input type="text" required v-model="area" placeholder="县/区" @keyup = "checkIsRight"/></tr><br />
+            <tr> <input type="text" required v-model="addr" placeholder="详细地址" @keyup = "checkIsRight"/></tr><br />
+            <tr> <input type="text" required v-model="postCode" placeholder="邮政编码" @keyup = "checkIsRight"/></tr><br />
+            </tr><br />
+            <tr> <button type="submit" @click="submitData">提交</button></tr>
+        </table>
+
+    </div>
+    <script type="text/javascript " src="static/js/quick_links.js "></script>
+    <script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/axios.min.js"></script>
+    <script src="static/js/cookie_utils.js"></script>
+    <script src="static/js/baseurl.js"></script>
+    <script src="static/js/utils.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: "#addrContainer",
+            data: {
+                userId: "",
+                receiverName: "",
+                receiverMobile: "",
+                province: "",
+                city: "",
+                area: "",
+                addr: "",
+                postCode: "",
+                token: "",
+                tips: "缺少必填项",
+                isRight: false,
+                returnUrl:"",
+                cids:"",
+            }, methods: {
+                checkIsRight:function(){
+                    if (this.userId != "" && this.receiverName != "" && this.receiverMobile != "" && this.province != "" && this.city != "" && this.area != "" && this.addr != "" && this.postCode != "") {
+                        this.isRight = true;
+                    } else {
+                        this.isRight = false;
+                    }
+                }
+                ,
+                submitData: function () {
+                    userId = this.userId;
+                    receiverName = this.receiverName;
+                    receiverMobile = this.receiverMobile;
+                    province = this.province;
+                    city = this.city;
+                    area = this.area;
+                    addr = this.addr;
+                    postCode = this.postCode;
+                    if (this.isRight) {
+                        var userAddr = {
+                            userId: userId,
+                            receiverName: receiverName,
+                            receiverMobile: receiverMobile,
+                            province: province,
+                            city: city,
+                            area: area,
+                            addr: addr,
+                            postCode: postCode,
+                        }
+                        axios({
+                            url: baseUrl + "useraddr/add",
+                            method: "post",
+                            data: userAddr
+                            , headers: {
+                                token: this.token,
+                            }
+                        }).then((res) => {
+                            console.log(res.data);
+                            if (res.data.code == 10000) {
+                                alert("添加成功")
+                                this.cids=getUrlParam("cids");
+                                this.returnUrl = getUrlParam("returnUrl");
+                                if(this.returnUrl=="order-add.html"&&this.cids!=""&this.cids!=null){
+                                    window.location.href = "order-add.html?"+"cids="+this.cids;
+                                }else{
+                                    window.location.href = "user-center.html";
+                                }
+                            } else {
+                                alert("fail");
+                            }
+
+                        });
+                    }else{
+                        alert("请您继续输入必填项~~");
+                    }
+                }
+            },
+            created: function () {
+                var token = getCookieValue("token");
+                this.token = token;
+                if (token != null && token != "") {
+                    this.isLogin = true;
+                    this.userId = getCookieValue("userid")
+                } else {
+                    window.location.href("login.html?returnUrl=add-address.html");
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>

@@ -1,183 +1,257 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<link href="static/css/admin.css" rel="stylesheet" type="text/css">
-		<link href="static/css/amazeui.css" rel="stylesheet" type="text/css">
-		<link href="static/css/personal.css" rel="stylesheet" type="text/css">
-		<link href="static/css/systyle.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css"/>
-		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-		<script src="static/js/jquery-1.9.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-	<body>
-		
-		<div id="container">
-			
-			<div class="m-order" style="margin-bottom: 0px;">
-				<div class="s-bar"><i class="s-icon"></i>我的订单
-					<a href="/order.html" class="i-load-more-item-shadow">全部订单</a>
-				</div>
-				<ul>
-					<li style="width: 25%;">
-						<a @click="queryByStatus(1)"><i><img src="static/images/pay.png"></i> <span>待付款<em class="m-num" style="display: none;">0</em></span></a>
-					</li>
-					<li style="width: 25%;">
-						<a @click="queryByStatus(2)"><i><img src="static/images/send.png"></i> <span>待发货<em class="m-num" style="display: none;">0</em></span></a>
-					</li>
-					<li style="width: 25%;">
-						<a @click="queryByStatus(3)"><i><img src="static/images/receive.png"></i> <span>待收货<em class="m-num" style="display: none;">0</em></span></a>
-					</li>
-					<li style="width: 25%;">
-						<a @click="queryByStatus(4)" ><i><img src="static/images/comment.png"></i> <span>待评价<em class="m-num" style="display: none;">0</em></span></a>
-					</li>
-				</ul>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link href="static/css/admin.css" rel="stylesheet" type="text/css">
+	<link href="static/css/amazeui.css" rel="stylesheet" type="text/css">
+	<link href="static/css/personal.css" rel="stylesheet" type="text/css">
+	<link href="static/css/systyle.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="static/js/jquery-1.9.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+
+	<div id="container">
+
+		<div class="m-order" style="margin-bottom: 0px;">
+			<div class="s-bar"><i class="s-icon"></i>我的订单
+				<a href="user-orderlist.html" class="i-load-more-item-shadow">全部订单</a>
 			</div>
-			
-			<div class="box-container-bottom" style="margin-bottom: 15px;"></div>
-			
-			<div class="m-logistics">
-				<div class="s-bar"><i class="s-icon"></i></div>
-				<div class="s-content">
-					<ul class="lg-list"></ul>
-					<table class="table" border="1" cellspacing="" cellpadding="">
-						<tr>
-							<th>序号</th>
-							<th>订单商品</th>
-							<th>订单状态</th>
-							<th>时间</th>
-							<th>操作</th>
-						</tr>
-						<tr v-for="order,index in orders">
-							<td>{{index+1}}</td>
-							<td>{{order.untitled}}</td>
-							<td>
-								<span v-if="order.status=='1'">待付款</span>
-								<span v-if="order.status=='2'">待发货</span>
-								<span v-if="order.status=='3'">待收货</span>
-								<span v-if="order.status=='4'">待评价</span>
-								<span v-if="order.status=='5'">已完成</span>
-								<span v-if="order.status=='6'">已取消</span>
-							</td>
-							<td>{{order.createTime}}</td>
-							<td>
-								<template v-if="order.status==1">
-									<button class="btn btn-success btn-xs" v-if="order.status=='1'">支付订单</button>
-									<button class="btn btn-danger btn-xs" v-if="order.status=='1'">取消订单</button>
-								</template>
-								<button class="btn btn-danger btn-xs" v-if="order.status=='2'">取消订单</button>
-								<button v-if="order.status=='3'">确认收货</button>
-								<button v-if="order.status=='4'">去评价</button>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="5">
-								<!--分页 -->
-								<el-pagination background layout="prev, pager, next" :page-size="limit" :total="count"
-									@current-change="pager"></el-pagination>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			
+			<ul>
+				<li style="width: 25%;">
+					<a @click="queryByStatus(1)"><i><img src="static/images/pay.png"></i> <span>待付款<em class="m-num"
+								style="display: none;">0</em></span></a>
+				</li>
+				<li style="width: 25%;">
+					<a @click="queryByStatus(2)"><i><img src="static/images/send.png"></i> <span>待发货<em class="m-num"
+								style="display: none;">0</em></span></a>
+				</li>
+				<li style="width: 25%;">
+					<a @click="queryByStatus(3)"><i><img src="static/images/receive.png"></i> <span>待收货<em class="m-num"
+								style="display: none;">0</em></span></a>
+				</li>
+				<li style="width: 25%;">
+					<a @click="queryByStatus(4)"><i><img src="static/images/comment.png"></i> <span>待评价<em class="m-num"
+								style="display: none;">0</em></span></a>
+				</li>
+			</ul>
 		</div>
-		<script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
-		<script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
-		<script src="static/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="static/js/element-ui-index.js" type="text/javascript" charset="utf-8"></script>
-		<script src="static/js/baseurl.js"></script>
-		<script type="text/javascript">
-			var v=new Vue({
-				el:"#container",
-				data:{
-					token:"",
-					pageNum:1,
-					limit:5,
-					userId:"",
-					status:null,
-					orders:[],
-					count:0
-				},
-				created:function(){
-					//1.加载页面，请求订单信息
-					var url1=baseUrl+"order/list";
-					this.token=getCookieValue("token");
-					this.userId=getCookieValue("userid");
+
+		<div class="box-container-bottom" style="margin-bottom: 15px;"></div>
+
+		<div class="m-logistics">
+			<div class="s-bar"><i class="s-icon"></i></div>
+			<div class="s-content">
+				<ul class="lg-list"></ul>
+				<table class="table" border="1" cellspacing="" cellpadding="">
+					<tr>
+						<th>序号</th>
+						<th>订单商品</th>
+						<th>订单状态</th>
+						<th>时间</th>
+						<th>操作</th>
+					</tr>
+					<tr v-for="order,index in orders" v-if="order.deleteStatus==0">
+						<td>{{index+1}}</td>
+						<td>{{order.untitled.substring(0,order.untitled.length-1)}}</td>
+						<td>
+							<span v-if="order.status == '1'">待付款</span>
+							<span v-else-if="order.status == '2'">待发货</span>
+							<span v-else-if="order.status == '3'">待收货</span>
+							<span v-else-if="order.status == '4'">待评价</span>
+							<span v-else-if="order.status == '5'">已完成</span>
+							<span v-else-if="order.status == '6'&&order.deleteStatus==0">已关闭</span>
+						</td>
+						<td>{{order.createTime}}</td>
+						<td>
+							<template v-if="order.status == '1'">
+								<button class="btn btn-success btn-xs">去支付</button>
+								<button class="btn btn-danger btn-xs" 
+								@click="cancelOrderOnNoPay" :data-id="order.orderId">取消订单</button>
+							</template>
+							<template v-if="order.status == '2'">
+								<button class="btn btn-danger btn-xs">取消订单</button>
+							</template>
+							<template v-if="order.status == '3'">
+								<button class="btn btn-success btn-xs">确认收货</button>
+							</template>
+							<template v-if="order.status == '4'">
+								<button class="btn btn-success btn-xs" @click="gotoComment"
+									:data-index="index">去评价</button>
+							</template>
+							<template v-if="order.status == '5' || order.status == '6'">
+								<button @click="updateDeleteStatusToOne" :data-id="order.orderId" class="btn btn-success btn-xs">删除</button>
+							</template>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<!--分页 -->
+							<el-pagination background layout="prev, pager, next" :page-size="limit" :total="count"
+								@current-change="pager"></el-pagination>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+	<script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
+	<script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
+	<script src="static/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="static/js/element-ui-index.js" type="text/javascript" charset="utf-8"></script>
+	<script src="static/js/baseurl.js"></script>
+	<script type="text/javascript">
+		var v = new Vue({
+			el: "#container",
+			data: {
+				token: "",
+				pageNum: 1,
+				limit: 5,
+				userId: "",
+				status: null,
+				orders: [],
+				count: 0
+			},
+			created: function () {
+				//1.加载页面，请求订单信息
+				var url1 = baseUrl + "order/list";
+				this.token = getCookieValue("token");
+				this.userId = getCookieValue("userid");
+				axios({
+					url: url1,
+					method: "get",
+					headers: {
+						token: this.token
+					},
+					params: {
+						pageNum: this.pageNum,
+						userId: this.userId,
+						status: this.status,
+						limit: this.limit
+					}
+				}).then((res) => {
+					if (res.data.code == 10000) {
+						console.log("订单信息=============》》》》");
+						console.log(res.data.data.list);
+						this.orders = res.data.data.list;
+						this.count = res.data.data.count;
+					}
+				});
+			},
+			methods: {
+				cancelOrderOnNoPay:function(event){
+					var orderId = event.srcElement.dataset.id;
+					var token = getCookieValue("token");
+					var url = baseUrl + "order/cancelOrder";
 					axios({
-						url:url1,
-						method:"get",
-						headers:{
-							token:this.token
+						url:url,
+						method:"put",
+						data:{
+							orderId:orderId
 						},
-						params:{
-							pageNum:this.pageNum,
-							userId:this.userId,
-							status:this.status,
-							limit:this.limit
+						headers:{
+							token:token
 						}
 					}).then((res)=>{
-						if(res.data.code==10000){
-							console.log(res.data.data);
-							this.orders=res.data.data.list;
-							this.count=res.data.data.count;
+						console.log("取消订单的时候返回的数据：");
+							console.log(res.data.code);
+							if(res.data.code==10000){
+								alert("取消成功");
+								window.location.reload();
+							}else{
+								alert("取消失败，请在几分钟后再次尝试");
+							}
+					});
+				},updateDeleteStatusToOne:function(event){
+					var orderId = event.srcElement.dataset.id;
+					var token = getCookieValue("token");
+					var url = baseUrl + "order/deleteStatusToOne";
+					axios({
+						url:url,
+						method:"put",
+						data:{
+							orderId:orderId
+						},
+						headers:{
+							token:token
+						}
+					}).then((res)=>{
+						console.log("删除订单的时候返回的数据：");
+							console.log(res.data.code);
+							if(res.data.code==10000){
+								alert("删除成功");
+								window.location.reload();
+							}else{
+								alert("订单删除失败");
+							}
+					});
+				},
+				pager: function (page) {
+					this.pageNum = page;
+					var url1 = baseUrl + "order/list";
+					this.token = getCookieValue("token");
+					this.userId = getCookieValue("userid");
+					axios({
+						url: url1,
+						method: "get",
+						headers: {
+							token: this.token
+						},
+						params: {
+							pageNum: this.pageNum,
+							userId: this.userId,
+							status: this.status,
+							limit: this.limit
+						}
+					}).then((res) => {
+						if (res.data.code == 10000) {
+							this.orders = res.data.data.list;
+							this.count = res.data.data.count;
 						}
 					});
 				},
-				methods:{
-					pager:function(page){
-						this.pageNum=page;
-						var url1=baseUrl+"order/list";
-						this.token=getCookieValue("token");
-						this.userId=getCookieValue("userid");
-						axios({
-							url:url1,
-							method:"get",
-							headers:{
-								token:this.token
-							},
-							params:{
-								pageNum:this.pageNum,
-								userId:this.userId,
-								status:this.status,
-								limit:this.limit
-							}
-						}).then((res)=>{
-							if(res.data.code==10000){
-								this.orders=res.data.data.list;
-								this.count=res.data.data.count;
-							}
-						});
-					},
-					queryByStatus:function(status){
-						this.status=status;
-						var url1=baseUrl+"order/list";
-						axios({
-							url:url1,
-							method:"get",
-							headers:{
-								token:this.token
-							},
-							params:{
-								pageNum:this.pageNum,
-								userId:this.userId,
-								status:this.status,
-								limit:this.limit,
-								status:this.status,
-							}
-						}).then((res)=>{
-							if(res.data.code==10000){
-								this.orders=res.data.data.list;
-								this.count=res.data.data.count;
-							}
-						});
-						console.log(this.status)
-					}
+				queryByStatus: function (status) {
+					this.status = status;
+					var url1 = baseUrl + "order/list";
+					axios({
+						url: url1,
+						method: "get",
+						headers: {
+							token: this.token
+						},
+						params: {
+							pageNum: this.pageNum,
+							userId: this.userId,
+							status: this.status,
+							limit: this.limit,
+						}
+					}).then((res) => {
+						if (res.data.code == 10000) {
+							this.orders = res.data.data.list;
+							this.count = res.data.data.count;
+						}
+					});
+					console.log(this.status)
+				},
+				gotoComment: function (event) {
+					var index = event.srcElement.dataset.index;
+					console.log("index的值=>"+index)
+					var order = this.orders[index];
+					console.log("order的值=>")
+					console.log(order)
+					localStorage.setItem("order", JSON.stringify(order));
+					window.location.href="user-commentadd.html";
 				}
-			});
-		</script>
-		
-	</body>
+			}
+		});
+	</script>
+
+</body>
+
 </html>
