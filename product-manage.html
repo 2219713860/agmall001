@@ -1,0 +1,457 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>管理员界面</title>
+
+    <link href="static/css/amazeui.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/demo.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/cartstyle.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/optstyle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.5/dist/css/layui.css">
+    <style>
+        th {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 5px 5px;
+        }
+
+        td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 5px 5px;
+        }
+
+        table {
+            margin: 0 auto;
+        }
+
+        #asdasdbabbawwb {
+            float: right;
+            margin-right: 50px;
+        }
+    </style>
+    <script type="text/javascript" src="static/js/jquery.js"></script>
+
+</head>
+
+<body>
+    <div id="container">
+        <span v-if="username!=''" style="font-size: large;margin-left: 30px;">{{username}}
+            <a href="#" target="_top" style="font-size: large;margin-right: 30px;" @click="clearCookie">退出登录</a>
+        </span>
+        <span id="asdasdbabbawwb" v-if="username!=''" style="font-size: large;margin-left: 30px;">
+            <a id="login_product" href="admin.html" style="font-size:large;" target="_blank">进入订单管理</a>
+        </span>
+        <!--悬浮搜索框-->
+        <div class="nav white">
+            <div class="logo"><img src="static/images/logo.png" /></div>
+            <div class="search-bar pr">
+                <span>
+                    商品检索
+                    <form>
+                        <input v-model="productId" type="text" placeholder="商品Id" autocomplete="off">
+                        <input @click="getProductAll" id="ai-topsearch" class="submit am-btn" value="搜索" index="1">
+                    </form>
+                </span>
+            </div>
+        </div>
+        <div id="showProductAll">
+            <table id="product">
+                <caption>商品表</caption>
+                <tr>
+                    <th>商品主键</th>
+                    <th>商品名称</th>
+                    <th>分类Id</th>
+                    <th>根分类Id</th>
+                    <th>销售数量</th>
+                    <th>产品状态</th>
+                    <th>商品内容</th>
+                    <th>创建时间</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                    <th><button @click="addProduct">添加商品</button></th>
+                </tr>
+                <tbody v-if="product!=null">
+                    <tr>
+                        <td>{{product.productId}}</td>
+                        <td>{{product.productName}}</td>
+                        <td>{{product.categoryId}}</td>
+                        <td>{{product.rootCategoryId}}</td>
+                        <td>{{product.soldNum}}</td>
+                        <td v-if="product.productStatus==1">正常状态</td>
+                        <td v-if="product.productStatus==0">下架</td>
+                        <td v-if="product.productStatus==-1">删除</td>
+                        <td>{{product.content}}</td>
+                        <td>{{product.createTime}}</td>
+                        <td>{{product.updateTime}}</td>
+                        <td>
+                            <button @click="modifyProduct" type="button">修改</button>
+                            <button @click="deleteProduct" type="button"
+                                :data-productid="product.ProductId">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="product_param">
+                <caption>商品参数表</caption>
+                <tr>
+                    <th>商品参数id</th>
+                    <th>商品id</th>
+                    <th>产地;产地，例：中国江苏</th>
+                    <th>保质期;保质期，例：180天</th>
+                    <th>品牌名;品牌名，例：三只大灰狼</th>
+                    <th>生产厂名;生产厂名，例：大灰狼工厂</th>
+                    <th>生产厂址;生产厂址，例：大灰狼生产基地</th>
+                    <th>包装方式;包装方式，例：袋装</th>
+                    <th>规格重量;规格重量，例：35g</th>
+                    <th>存储方法;存储方法，例：常温5~25°</th>
+                    <th>食用方式;食用方式，例：开袋即食</th>
+                    <th>创建时间</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                    <th v-if="haveProductId"><button @click="addProductParam">添加商品参数</button></th>
+                </tr>
+                <tbody v-if="productParam!=null">
+                    <tr>
+                        <td>{{productParam.paramId}}</td>
+                        <td>{{productParam.productId}}</td>
+                        <td>{{productParam.productPlace}}</td>
+                        <td>{{productParam.footPeriod}}</td>
+                        <td>{{productParam.brand}}</td>
+                        <td>{{productParam.factoryName}}</td>
+                        <td>{{productParam.factoryAddress}}</td>
+                        <td>{{productParam.packagingMethod}}</td>
+                        <td>{{productParam.weight}}</td>
+                        <td>{{productParam.storageMethod}}</td>
+                        <td>{{productParam.eatMethod}}</td>
+                        <td>{{productParam.createTime}}</td>
+                        <td>{{productParam.updateTime}}</td>
+                        <td><button type="button" @click="modifyProductParam">修改</button>&nbsp;
+                            <button @click="deleteProductParam" type="button"
+                                :data-paramid="productParam.paramId">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="product_skus">
+                <caption>商品套餐表</caption>
+                <tr>
+                    <th>sku编号</th>
+                    <th>商品id</th>
+                    <th>sku名称</th>
+                    <th>sku图片</th>
+                    <th>属性组合【{颜色:['陶瓷白','黄色']}】</th>
+                    <th>原价</th>
+                    <th>销售价格</th>
+                    <th>折扣力度</th>
+                    <th>库存</th>
+                    <th>创建时间</th>
+                    <th>更新时间</th>
+                    <th>sku状态(1启用,0禁用,-1删除)</th>
+                    <th>操作</th>
+                    <th v-if="haveProductId"><button @click="addProductSku">添加商品套餐</button></th>
+                </tr>
+                <tbody>
+                    <tr v-for="ps,index in productSkus">
+                        <td>{{ps.skuId}}</td>
+                        <td>{{ps.productId}}</td>
+                        <td>{{ps.skuName}}</td>
+                        <td>{{ps.skuImg}}</td>
+                        <td>{{ps.untitled}}</td>
+                        <td>{{ps.originalPrice}}</td>
+                        <td>{{ps.sellPrice}}</td>
+                        <td>{{ps.discounts}}</td>
+                        <td>{{ps.stock}}</td>
+                        <td>{{ps.createTime}}</td>
+                        <td>{{ps.updateTime}}</td>
+                        <td>{{ps.status}}</td>
+                        <td><button type="button" @click="modifyProductSku" :data-index="index">修改</button>
+                            <button @click="deleteProductSku" type="button" :data-index="index">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="product_img">
+                <caption>图片表</caption>
+                <tr>
+                    <th>商品图片Id</th>
+                    <th>商品外键id</th>
+                    <th>图片地址</th>
+                    <th>图片顺序，从小到大</th>
+                    <th>是否主图，1：是，0：否</th>
+                    <th>创建时间</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                    <th v-if="haveProductId"><button @click="addProductImg">添加商品参数</button></th>
+                </tr>
+                <tbody>
+                    <tr v-for="pi,index in productImgs">
+                        <td>{{pi.id}}</td>
+                        <td>{{pi.itemId}}</td>
+                        <td>{{pi.url}}</td>
+                        <td>{{pi.sort}}</td>
+                        <td>{{pi.isMain}}</td>
+                        <td>{{pi.createdTime}}</td>
+                        <td>{{pi.updatedTime}}</td>
+                        <td><button type="button" @click="modifyProductImg" :data-index="index">修改</button>
+                            <button @click="deleteProductImg" type="button" :data-index="index">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="static/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//unpkg.com/layui@2.6.5/dist/layui.js"></script>
+    <script src="static/js/baseurl.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: "#container",
+            data: {
+                users: [],//用户信息
+                orders: [],
+                productId: "",
+                product: null,
+                productImgs: [],
+                productParam: null,
+                productSkus: [],
+                token: "",
+                username: "",
+                haveProductId: false,
+            },
+            created: function () {
+                this.username = getCookieValue("username");
+                this.token = getCookieValue("token");
+                var productId = getUrlParam("productId");
+
+                var self = this;
+                if (productId != "" && productId != null) {
+                    self.productId = productId;
+                    productId = this.productId;
+                    this.getProductAll();
+                } else {
+                    this.clearAllData();
+                    this.productId = "";
+                    this.haveProductId = false;
+                }
+            },
+            watch: {
+                productId: function () {
+                    if (this.productId == "" || this.productId == null) {
+                        this.clearAllData();
+                        this.haveProductId = false;
+                    }
+                }
+            }
+            ,
+            methods: {
+                deleteProduct: function () {
+                    var productId = this.productId;
+                    var token = this.token;
+                    var self = this;
+                    var url = baseUrl + "product/deleteProduct";
+                    if (confirm("确定删除吗")) {
+                        axios({
+                            url: url,
+                            method: "delete",
+                            headers: {
+                                token: token
+                            },
+                            params: {
+                                productId:productId
+                            }
+                        }).then((res) => {
+                            var productId = self.productId;
+                            window.location.href = "product-manage.html?productId=" + productId;
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    }
+                },
+                deleteProductParam: function (event) {
+                    var paramId=event.srcElement.dataset.paramid;
+                    var token = this.token;
+                    console.log(paramId);
+                    var self = this;
+                    var url = baseUrl + "product/deleteParam";
+                    if (confirm("确定删除吗")) {
+                        axios({
+                            url: url,
+                            method: "delete",
+                            headers: {
+                                token: token
+                            },
+                            params: {
+                                paramId:paramId
+                            }
+                        }).then((res) => {
+                            var productId = self.productId;
+                            window.location.href = "product-manage.html?productId=" + productId;
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    }
+                },
+                deleteProductSku: function (event) {
+                    var index = event.srcElement.dataset.index;
+                    var skuId = this.productSkus[index].skuId;
+
+                    var token = this.token;
+                    console.log(skuId);
+                    var self = this;
+                    var url = baseUrl + "productSku/deleteSku";
+                    if (confirm("确定删除吗")) {
+                        axios({
+                            url: url,
+                            method: "delete",
+                            headers: {
+                                token: token
+                            },
+                            params: {
+                                skuId:skuId
+                            }
+                        }).then((res) => {
+                            var productId = self.productId;
+                            window.location.href = "product-manage.html?productId=" + productId;
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    }
+
+                },
+                deleteProductImg: function (event) {
+                    var index = event.srcElement.dataset.index;
+                    var id = this.productImgs[index].id;
+                    var token = this.token;
+                    console.log(id);
+                    var self = this;
+                    var url = baseUrl + "productImg/deleteImg";
+                    if (confirm("确定删除吗")) {
+                        axios({
+                            url: url,
+                            method: "delete",
+                            headers: {
+                                token: token
+                            },
+                            params: {
+                                id: id
+                            }
+                        }).then((res) => {
+                            var productId = self.productId;
+
+                            window.location.href = "product-manage.html?productId=" + productId;
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    }
+
+                },
+                modifyProduct: function () {
+                    var productId = this.productId;
+                    window.location.href = "modify-product.html?productId=" + productId;
+                },
+                modifyProductParam: function () {
+                    var paramId = this.productParam.paramId;
+                    var productId = this.productId;
+                    window.location.href = "modify-params.html?paramId=" + paramId + "&productId=" + productId;
+                },
+                modifyProductSku: function (event) {
+                    var index = event.srcElement.dataset.index;
+                    var skuId = this.productSkus[index].skuId;
+                    window.location.href = "modify-sku.html?skuId=" + skuId;
+                },
+                modifyProductImg: function (event) {
+                    console.log("--------------------");
+                    var index = event.srcElement.dataset.index;
+                    var id = this.productImgs[index].id;
+                    console.log(id);
+                    window.location.href = "modify-img.html?id=" + id;
+                },
+                addProduct: function () {
+                    window.location.href = "add-product.html";
+                },
+                addProductParam: function () {
+                    window.location.href = "add-product-param.html?productId=" + this.productId;
+                },
+                addProductImg: function () {
+                    window.location.href = "add-product-img.html?productId=" + this.productId;
+                },
+                addProductSku: function () {
+                    window.location.href = "add-product-sku.html?productId=" + this.productId;
+                },
+                clearAllData: function () {
+                    this.product = null;
+                    this.productImgs = [];
+                    this.productParam = null;
+                    this.productSkus = [];
+                }
+                ,
+                getProductAll: function () {
+                    this.product = null;
+                    this.productImgs = [];
+                    this.productParam = null;
+                    this.productSkus = [];
+                    const token = this.token;
+                    const productId = this.productId;
+                    const url = baseUrl + "product/listProductAll"
+                    if (productId != "" && productId != null) {
+                        axios({
+                            url: url,
+                            method: "get",
+                            headers: {
+                                token: token
+                            },
+                            params: {
+                                productId: productId
+                            }
+                        }).then((res) => {
+                            console.log(res.data);
+                            if (res.data.code == 10000) {
+                                if (res.data.data.product != null) {
+                                    this.product = res.data.data.product;
+                                    console.log(this.product);
+                                }
+                                if (res.data.data.productImgs.length != 0) {
+                                    this.productImgs = res.data.data.productImgs;
+                                    console.log(this.productImgs);
+                                }
+                                if (res.data.data.productParam != null) {
+                                    this.productParam = res.data.data.productParam;
+                                    console.log(this.productParam);
+                                }
+                                if (res.data.data.productSkus.length != 0) {
+                                    this.productSkus = res.data.data.productSkus;
+                                    console.log(this.productSkus);
+                                }
+                                this.haveProductId = true;
+
+                            }
+                        });
+                    }
+                    else {
+                        alert("请输入商品编号");
+                    }
+                },
+                clearCookie: function () {
+                    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    localStorage.removeItem("token");
+                    window.location.href = "login.html"
+                },
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>

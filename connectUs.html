@@ -18,77 +18,12 @@
 
 <body>
 
-	<div class="login-boxtitle" style="height: 100px;">
-		<div class="logoBig">
-			<!-- logo的位置！！！！！！！！！！！！！！！ -->
-			<img src="static/images/爱购商城logo.jpg" style="margin-left: 0px; height: 100px;">
-		</div>
-	</div>
-
-	<div class="login-banner" id="container">
-		<div class="login-main">
-			<!-- 登录页面背景！！！！！！！！！！！！！ -->
-			<div id="test" class="login-banner-bg">
-				<span></span>
-				<img class="agmall-banner-font" src="static\images\agmallBanner.png" />
-			</div>
-			<div class="login-box" style="margin-top: 20px;">
-
-				<h3 class="title">爱购商城</h3>
-				<h5 :style="colorStyle" id="tips">{{tips}}&nbsp;</h5>
-				<div class="clear"></div>
-
-				<div class="login-form" style="background: none; margin-top: 15px;">
-					<form>
-						<div class="user-name" style="margin-top: 20px;">
-							<label for="user">
-								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-							</label>
-							<input type="text" v-model="username" placeholder="邮箱/手机/用户名" @keyup="checkInfo">
-						</div>
-						<div class="user-pass" style="margin-top: 20px;">
-							<label for="password">
-								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-							</label>
-							<input type="password" v-model="password" placeholder="请输入密码" @keyup="checkInfo">
-						</div>
-					</form>
-				</div>
-
-				<div class="login-links">
-					<label for="remember-me">
-						<input id="remember-me" type="checkbox">记住密码
-					</label>
-					<a href="#" class="am-fr">忘记密码</a>
-					<br />
-				</div>
-				<div class="am-cf">
-					<input type="button" @click="doSumbit" value="登 录" class="am-btn am-btn-primary am-btn-sm">
-				</div>
-				<div class="am-cf">
-					<input type="button" onclick="javascript:window.location.href='register.html'" value="注 册"
-						class="am-btn am-btn-default am-btn-sm">
-				</div>
-				<div class="partner">
-
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<div class="footer ">
-
-		<div class="footer-hd ">
-
-		</div>
-		<div class="footer-bd ">
-			<p>
-				<a href="javascript:void(0)" onclick="window.open('connectUs.html', 'popup', 'width=200,height=300')">联系我们</a>
-				<a href="# ">网站地图</a>
-			</p>
-		</div>
-	</div>
+<div>
+	<h1>如果您的密码忘记了请联系我们<br/>
+	<hr/>
+	电话：17838591516
+	</h1>
+</div>
 
 	<script type="text/javascript" src="static/js/jquery-1.9.min.js"></script>
 	<script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>

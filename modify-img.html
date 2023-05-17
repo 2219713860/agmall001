@@ -1,0 +1,190 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>管理员界面</title>
+
+    <link href="static/css/amazeui.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/demo.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/cartstyle.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/optstyle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.5/dist/css/layui.css">
+    <style>
+        css .table-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 400px;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 100px;
+            word-wrap: break-word;
+            /* 长内容自动换行 */
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+    </style>
+    </style>
+    <script type="text/javascript" src="static/js/jquery.js"></script>
+
+</head>
+
+<body>
+    <div id="container">
+
+        <div class="tabler">
+            <table>
+                <tr>
+                    <td>{{id}}</td>
+                    <td>id:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>{{itemId}}</td>
+                    <td>itemId:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>{{url}}</td>
+                    <td>url:</td>
+                    <td><input type="text" v-model="url"></td>
+                </tr>
+                <tr>
+                    <td>{{sort}}</td>
+                    <td>sort:</td>
+                    <td><input type="text" v-model="sort"></td>
+                </tr>
+                <tr>
+                    <td>{{isMain}}</td>
+                    <td>isMain:</td>
+                    <td><input type="text" v-model="isMain"></td>
+                </tr>
+                <tr>
+                    <td>{{createdTime}}</td>
+                    <td>createdTime:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>{{updatedTime}}</td>
+                    <td>updatedTime:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>操作</td>
+                    <td><button @click="modifyImg">提交</button></td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="static/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//unpkg.com/layui@2.6.5/dist/layui.js"></script>
+    <script src="static/js/baseurl.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: "#container",
+            data: {
+                token: "",
+                id: "",
+                itemId: "",
+                url: "",
+                sort: "",
+                isMain: "",
+                createdTime: "",
+                updatedTime: "",
+            },
+            created: function () {
+                var self = this; // 将this赋值给self变量
+                this.token = getCookieValue("token");
+                var token = this.token;
+                this.id = getUrlParam("id");
+                var id = this.id;
+                //todo
+                var url = baseUrl + "productImg/getOneImg";
+                axios({
+                    url: url,
+                    method: "get",
+                    headers: {
+                        token: token,
+                    },
+                    params: {
+                        id: id
+                    }
+                }).then(function (res) {
+                    console.log(res.data.data);
+                    var img = res.data.data;
+                    self.itemId = img.itemId;
+                    self.url = img.url;
+                    self.sort = img.sort;
+                    self.isMain = img.isMain;
+                    self.createdTime = img.createdTime;
+                    self.updatedTime = img.updatedTime;
+                });
+            },
+            methods: {
+                modifyImg: function () {
+                    var productImg = {
+                        id: this.id,
+                        url: this.url,
+                        sort: this.sort,
+                        isMain: this.isMain,
+                    }
+                    var url = baseUrl + "productImg/modifyImg";
+                    var token = this.token;
+                    var self=this;
+                    if (token != "") {
+                        axios({
+                            url: url,
+                            method: "put",
+                            headers: {
+                                token: token,
+                            },
+                            data: productImg
+                        }).then((res) => {
+                            if (res.data.code == 10000) {
+                                alert("成功");
+                                window.location.href="product-manage.html?productId="+self.itemId;
+                            } else {
+                                alert("请检查格式重新输入");
+                            }
+                        });
+                    }
+                },
+                clearCookie: function () {
+                    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    localStorage.removeItem("token");
+                    window.location.href = "login.html"
+                },
+
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>

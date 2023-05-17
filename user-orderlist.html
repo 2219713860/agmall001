@@ -85,7 +85,7 @@
 									:data-index="index">去评价</button>
 							</template>
 							<template v-if="order.status == '5' || order.status == '6'">
-								<button @click="updateDeleteStatusToOne" :data-id="order.orderId" class="btn btn-success btn-xs">删除</button>
+								<button @click="updateDeleteStatusToOne" :data-id="order.orderId" class="btn btn-danger btn-xs">删除</button>
 							</template>
 						</td>
 					</tr>

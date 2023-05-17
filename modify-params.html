@@ -1,0 +1,238 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>管理员界面</title>
+
+    <link href="static/css/amazeui.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/demo.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/cartstyle.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/optstyle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.5/dist/css/layui.css">
+    <style>
+        css .table-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 400px;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 100px;
+            word-wrap: break-word;
+            /* 长内容自动换行 */
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+    </style>
+    </style>
+    <script type="text/javascript" src="static/js/jquery.js"></script>
+
+</head>
+
+<body>
+    <div id="container">
+
+        <div class="tabler">
+            <table>
+                <tr>
+                    <td>{{paramId}}</td>
+                    <td>paramId:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>{{productPlace}}</td>
+                    <td>productPlace:</td>
+                    <td><input type="text" v-model="productPlace"></td>
+                </tr>
+                <tr>
+                    <td>{{productId}}</td>
+                    <td>productId:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>{{footPeriod}}</td>
+                    <td>footPeriod:</td>
+                    <td><input type="text" v-model="footPeriod"></td>
+                </tr>
+                <tr>
+                    <td>{{brand}}</td>
+                    <td>brand:</td>
+                    <td><input type="text" v-model="brand"></td>
+                </tr>
+                <tr>
+                    <td>{{factoryName}}</td>
+                    <td>factoryName:</td>
+                    <td><input type="text" v-model="factoryName"></td>
+                </tr>
+                <tr>
+                    <td>{{factoryAddress}}</td>
+                    <td>factoryAddress:</td>
+                    <td><input type="text" v-model="factoryAddress"></td>
+                </tr>
+                <tr>
+                    <td>{{packagingMethod}}</td>
+                    <td>packagingMethod:</td>
+                    <td><input type="text" v-model="packagingMethod"></td>
+                </tr>
+                <tr>
+                    <td>{{weight}}</td>
+                    <td>weight:</td>
+                    <td><input type="text" v-model="weight"></td>
+                </tr>
+                <tr>
+                    <td>{{storageMethod}}</td>
+                    <td>storageMethod:</td>
+                    <td><input type="text" v-model="storageMethod"></td>
+                </tr>
+                <tr>
+                    <td>{{eatMethod}}</td>
+                    <td>eatMethod:</td>
+                    <td><input type="text" v-model="eatMethod"></td>
+                </tr>
+                <tr>
+                    <td>{{createTime}}</td>
+                    <td>createTime:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>{{updateTime}}</td>
+                    <td>updateTime:</td>
+                    <td>----</td>
+                </tr>
+                <tr>
+                    <td>操作</td>
+                    <td><button @click="modifyParam">提交</button></td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="static/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//unpkg.com/layui@2.6.5/dist/layui.js"></script>
+    <script src="static/js/baseurl.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: "#container",
+            data: {
+                token: "",
+                paramId: "",
+                productPlace: "",
+                productId: "",
+                footPeriod: "",
+                brand: "",
+                factoryName: "",
+                factoryAddress: "",
+                packagingMethod: "",
+                weight: "",
+                storageMethod: "",
+                eatMethod: "",
+                createTime: "",
+                updateTime: "",
+            },
+            created: function () {
+                var self = this; // 将this赋值给self变量
+                this.token = getCookieValue("token");
+                var token = this.token;
+                this.paramId = getUrlParam("paramId");
+                var paramId = this.paramId;
+                this.productId = getUrlParam("productId");
+                var productId = this.productId;
+                var url = baseUrl + "product/getParam"
+                axios({
+                    url: url,
+                    method: "get",
+                    headers: {
+                        token: token,
+                    },
+                    params: {
+                        paramId: paramId
+                    }
+                }).then(function (res) {
+                    console.log(res.data.data);
+                    var param = res.data.data;
+                    self.productPlace = param.productPlace; // 使用self访问Vue实例的数据
+                    self.footPeriod = param.footPeriod;
+                    self.brand = param.brand;
+                    self.factoryName = param.factoryName;
+                    self.factoryAddress = param.factoryAddress;
+                    self.packagingMethod = param.packagingMethod;
+                    self.weight = param.weight;
+                    self.storageMethod = param.storageMethod;
+                    self.eatMethod = param.eatMethod;
+                    self.createTime = param.createTime;
+                    self.updateTime = param.updateTime;
+                });
+            },
+            methods: {
+                modifyParam: function () {
+                    var productParam = {
+                        paramId: this.paramId,
+                        productPlace: this.productPlace,
+                        footPeriod: this.footPeriod,
+                        brand: this.brand,
+                        factoryName: this.factoryName,
+                        factoryAddress: this.factoryAddress,
+                        packagingMethod: this.packagingMethod,
+                        weight: this.weight,
+                        storageMethod: this.storageMethod,
+                        eatMethod: this.eatMethod
+                    }
+                    var url = baseUrl + "product/updateProductParam";
+                    var token = this.token;
+                    var self = this;
+                    if (token != "") {
+                        axios({
+                            url: url,
+                            method: "put",
+                            headers: {
+                                token: token,
+                            },
+                            data: productParam
+                        }).then((res) => {
+                            if (res.data.code == 10000) {
+                                alert("成功");
+                                window.location.href = "product-manage.html?productId=" + self.productId;
+                            } else {
+                                alert("请检查格式重新输入");
+                            }
+                        });
+                    }
+                },
+                clearCookie: function () {
+                    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    localStorage.removeItem("token");
+                    window.location.href = "login.html"
+                },
+
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>

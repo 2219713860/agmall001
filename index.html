@@ -35,7 +35,7 @@ a:not(:last-child)::before {
                     <div class="topMessage">
                         <div v-if="isLogin" class="menu-hd">
                             {{username}}
-                            <!--                    <button type="button" @click="clearCookie">注销</button>-->
+                            <a href="#" target="_top" @click="clearCookie">退出登录</a>
                         </div>
                         <div v-else class="menu-hd">
                             <a href="login.html" target="_top" class="h">亲，请登录</a>
@@ -106,7 +106,6 @@ a:not(:last-child)::before {
                     <div class="long-title"><span class="all-goods">全部分类</span></div>
                     <div class="nav-cont">
                         <div >
-                        
                             <a href="index.html"><span style="font-size: 20px; color: red;">首页</span></a>
                             <a href="#"><span style="font-size: 20px; color: red;">闪购</span></a>
                             <a href="#"><span style="font-size: 20px; color: red;">限时抢</span></a>
@@ -829,7 +828,9 @@ a:not(:last-child)::before {
                     window.location.href = encodeURI(url);
                 },
                 clearCookie: function () {
-                    clearCookie("token", "1");
+                    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    localStorage.removeItem("token");
+                    location.reload();
                 }
             }
         });

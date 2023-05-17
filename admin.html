@@ -1,0 +1,229 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>管理员界面</title>
+
+    <link href="static/css/amazeui.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/demo.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/cartstyle.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/optstyle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.5/dist/css/layui.css">
+    <style>
+        th {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 5px 5px;
+        }
+
+        td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 5px 5px;
+        }
+
+        #login_product {
+            float: right;
+            margin-right: 100px;
+        }
+    </style>
+    <script type="text/javascript" src="static/js/jquery.js"></script>
+
+</head>
+
+<body>
+    <div id="container">
+
+
+        <span v-if="username!=''" style="font-size: large;margin-left: 30px;">{{username}}
+            <a href="#" target="_top" style="font-size: large;margin-right: 30px;" @click="clearCookie">退出登录</a>
+        </span>
+        <span v-if="username!=''" style="font-size: large;margin-left: 30px;">
+            <a id="login_product" href="product-manage.html" style="font-size:large;" target="_blank">进入商品管理</a>
+        </span>
+
+        <!--悬浮搜索框-->
+
+        <div class="nav white">
+            <div class="logo"><img src="static/images/logo.png" /></div>
+
+            <div class="search-bar pr">
+                <span>
+                    订单检索
+                    <form>
+                        <input id="searchInput" v-model="orderId" type="text" placeholder="请输入订单编号" autocomplete="off">
+
+                        <input @click="getOrder" id="ai-topsearch" class="submit am-btn" value="搜索" index="1">
+                    </form>
+                </span>
+            </div>
+        </div>
+        <div id="showOrderandItem">
+            <table>
+                <tr>
+                    <th>订单编号</th>
+                    <th>用户ID</th>
+                    <th>产品名称</th>
+                    <th>收货人</th>
+                    <th>手机号</th>
+                    <th>收货地址</th>
+                    <th>总价格</th>
+                    <th>实际支付</th>
+                    <th>支付方式</th>
+
+                    <th>备注</th>
+                    <th>状态</th>
+                    <th>配送方式</th>
+                    <th>物流单号</th>
+                    <th>运费</th>
+
+                    <th>创建</th>
+                    <th>更新</th>
+                    <th>付款时间</th>
+                    <th>发货</th>
+                    <th>完成时间</th>
+                    <th>取消时间</th>
+                    <th>关闭类型</th>
+                    <th>用户已删除</th>
+                </tr>
+
+                <tr v-for="order,index in orders">
+                    <td>{{order.orderId}}</td>
+                    <td>{{order.userId}}</td>
+                    <td>{{order.untitled}}</td>
+                    <td>{{order.receiverName}}</td>
+                    <td>{{order.receiverMobile}}</td>
+                    <td>{{order.receiverAddress}}</td>
+                    <td>{{order.totalAmount}}</td>
+                    <td>{{order.actualAmount}}</td>
+                    <td v-if="order.payType==1">微信</td>
+                    <td v-if="order.payType==2">支付宝</td>
+                    <td>{{order.orderRemark}}</td>
+                    <td>
+                        <span v-if="order.status == '1'">待付款</span>
+                        <span v-else-if="order.status == '2'">待发货</span>
+                        <span v-else-if="order.status == '3'">待收货</span>
+                        <span v-else-if="order.status == '4'">待评价</span>
+                        <span v-else-if="order.status == '5'">已完成</span>
+                        <span v-else-if="order.status == '6'&&order.deleteStatus==0">已关闭</span>
+                    </td>
+                    <td>{{order.deliveryType}}</td>
+                    <td>{{order.deliveryFlowId}}</td>
+
+                    <td>{{order.orderFreight}}</td>
+
+                    <td>{{order.createTime}}</td>
+                    <td>{{order.updateTime}}</td>
+                    <td>{{order.payTime}}</td>
+                    <td>{{order.deliveryTime}}</td>
+                    <td>{{order.flishTime}}</td>
+                    <td>{{order.cancelTime}}</td>
+                    <td>
+                        <span v-if="order.closeType == '1'">超时未支付</span>
+                        <span v-else-if="order.closeType == '2'">退款关闭</span>
+                        <span v-else-if="order.closeType == '4'">买家取消</span>
+                        <span v-else-if="order.closeType == '15'">已通过货到付款交易</span>
+                    </td>
+                    <td>
+                        <span v-if="order.deleteStatus == '1'">
+                            <a href="#" target="_top" @click="deleteOrder">删除</a></span>
+                        <span v-if="order.deleteStatus == '0'">未删除</span>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <script src="static/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/vue2.6.14.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/cookie_utils.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//unpkg.com/layui@2.6.5/dist/layui.js"></script>
+    <script src="static/js/baseurl.js"></script>
+    <script type="text/javascript">
+       
+        var vm = new Vue({
+            el: "#container",
+            data: {
+                orders: [],
+                users: [],//用户信息
+                orderId: "",
+                token: "",
+                username: "",
+            },
+            created: function () {
+                this.username = getCookieValue("username");
+                this.token = getCookieValue("token");
+            },
+            methods: {
+                getOrder: function () {
+                    if (this.orderId == "") {
+                        alert("请输入订单ID");
+                    } else {
+                        var orderId = this.orderId;
+                        var token = getCookieValue("token");
+                        var url = baseUrl + "order/listOrderAndItems"
+                        axios({
+                            url: url,
+                            methods: "get",
+                            headers: {
+                                token: token
+                            },
+                            params: {
+                                orderId: orderId,
+                            },
+                        }
+                        ).then((res) => {
+                            if (res.data.code == 10000) {
+                                this.orders = res.data.data;
+                                console.log(this.orders[0]);
+                            } else {
+                                alert(res.data.msg);
+                            }
+                        });
+                    }
+
+                },
+                clearCookie: function () {
+                    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    localStorage.removeItem("token");
+                    window.location.href = "login.html"
+                },
+                deleteOrder: function () {
+                    if (confirm("确认删除吗？")) {
+                        var orderId = this.orderId;
+                        var token = this.token;
+                        var url = baseUrl + "order/deleteOrderAllByOrderId"
+                        axios({
+                            url: url,
+                            method: "delete",
+                            headers: {
+                                token: token,
+                            },
+                            params: {
+                                orderId: orderId
+                            }
+                        }).then((res) => {
+                            if (res.data.code == 10000) {
+                                window.location.reload();
+                                alert("删除成功");
+                            } else {
+                                alert("删除失败");
+                            }
+                        });
+
+                    }
+                }
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>
